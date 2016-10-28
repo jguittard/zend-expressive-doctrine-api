@@ -1,0 +1,45 @@
+<project name="Zend Expressive Doctrine API" default="help" basedir=".">
+    <property file="${project.basedir}/build.properties" />
+
+    <target name="help" description="List available targets">
+        <exec executable="vendor/bin/phing"
+              passthru="true">
+            <arg value="-l"/>
+        </exec>
+    </target>
+
+    <target name="doctrine-clean" description="Clean Doctrine stuff">
+        <exec executable="${doctrine.bin}" passthru="true">
+            <arg value="orm:clear-cache:metadata" />
+        </exec>
+        <exec executable="${doctrine.bin}" passthru="true">
+            <arg value="orm:clear-cache:query" />
+        </exec>
+        <exec executable="${doctrine.bin}" passthru="true">
+            <arg value="orm:generate-proxies" />
+        </exec>
+    </target>
+
+    <target name="create-db" description="Create SQLite DB file from ORM">
+        <delete dir="${project.basedir}/data/db/blog.db" quiet="true" />
+        <exec executable="${doctrine.bin}" passthru="true">
+            <arg value="orm:schema-tool:create" />
+            <arg value="--quiet" />
+        </exec>
+        <phingcall target="doctrine-clean" />
+    </target>
+
+    <target name="test" description="Launch PHPUnit">
+        <exec executable="${dir.vendor}/phpunit" passthru="true">
+            <arg value="--colors=always" />
+        </exec>
+    </target>
+
+    <target name="test-coverage" description="Launch PHPUnit with Clover coverage">
+        <exec executable="${dir.vendor}/phpunit" passthru="true">
+            <arg value="--colors=always" />
+            <arg value="--coverage-clover" />
+            <arg value="clover.xml" />
+        </exec>
+    </target>
+</project>
