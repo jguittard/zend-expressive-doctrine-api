@@ -9,14 +9,12 @@
 
 namespace App\Entity;
 
-use Zend\Stdlib\ArraySerializableInterface;
-
 /**
  * Interface EntityInterface
  *
  * @package App\Entity
  */
-interface EntityInterface extends ArraySerializableInterface
+interface EntityInterface
 {
     /**
      * @return string

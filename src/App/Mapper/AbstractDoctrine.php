@@ -11,7 +11,6 @@ namespace App\Mapper;
 
 use App\Entity\EntityInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\QueryBuilder;
 use Zend\Hydrator\Doctrine\DoctrineObject;
 use Zend\Hydrator\HydratorInterface;
 
@@ -164,7 +163,7 @@ abstract class AbstractDoctrine implements MapperInterface
     public function delete($id)
     {
         /** @var EntityInterface $entity */
-        $entity = $this->fetch($id);
+        $entity = $this->objectManager->find($this->entityClass, $id);
         if (!$entity) {
             return false;
         }
@@ -175,15 +174,5 @@ abstract class AbstractDoctrine implements MapperInterface
         } catch (\Exception $exception) {
             throw new MapperException($exception->getMessage(), $exception->getCode());
         }
-    }
-
-    /**
-     * @return QueryBuilder
-     */
-    protected function getQueryBuilder()
-    {
-        return $this->objectManager->createQueryBuilder()
-            ->select('row')
-            ->from($this->entityClass, 'row');
     }
 }
